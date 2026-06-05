@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lawrence Nyongesa | DevOps & Cloud Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1525;
+    --bg3: #141c2e;
+    --bg4: #1a2340;
+    --surface: #1e2a42;
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --accent3: #7b2fff;
+    --green: #00ff88;
+    --amber: #ffb300;
+    --text: #e8eef8;
+    --text2: #8899bb;
+    --text3: #4a5980;
+    --border: rgba(0,212,255,0.12);
+    --border2: rgba(0,212,255,0.25);
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Sora', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.7; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 5%; height:64px; background:rgba(10,14,26,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .nav-logo { font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--accent); text-decoration:none; }
+  .nav-links { display:flex; gap:28px; list-style:none; }
+  .nav-links a { font-family:var(--font-mono); font-size:12px; color:var(--text2); text-decoration:none; letter-spacing:0.5px; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--accent); }
+
+  /* HERO */
+  #hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:60px; padding:120px 5% 80px; position:relative; overflow:hidden; }
+  #hero::before { content:''; position:absolute; top:-200px; right:-200px; width:700px; height:700px; background:radial-gradient(circle,rgba(0,212,255,0.06) 0%,transparent 70%); pointer-events:none; }
+  #hero::after { content:''; position:absolute; bottom:-100px; left:-100px; width:500px; height:500px; background:radial-gradient(circle,rgba(123,47,255,0.05) 0%,transparent 70%); pointer-events:none; }
+
+  .hero-badge { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px; color:var(--green); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); padding:6px 14px; border-radius:100px; margin-bottom:24px; letter-spacing:0.5px; }
+  .hero-badge::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+  .hero-title { font-size:clamp(2.2rem,3.8vw,3.4rem); font-weight:700; line-height:1.1; letter-spacing:-1px; margin-bottom:8px; }
+  .hero-title span { color:var(--accent); }
+  .hero-divider { width:50px; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent3)); border-radius:2px; margin:20px 0; }
+  .hero-sub { font-size:15px; color:var(--text2); line-height:1.8; max-width:480px; margin-bottom:32px; }
+
+  .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+  .btn { font-family:var(--font-mono); font-size:13px; font-weight:500; padding:12px 26px; border-radius:6px; text-decoration:none; letter-spacing:0.3px; transition:all 0.2s; cursor:pointer; border:none; display:inline-block; }
+  .btn-primary { background:var(--accent); color:#0a0e1a; }
+  .btn-primary:hover { background:#00bfe8; transform:translateY(-1px); }
+  .btn-outline { background:transparent; color:var(--accent); border:1px solid var(--border2); }
+  .btn-outline:hover { background:rgba(0,212,255,0.08); transform:translateY(-1px); }
+
+  .hero-stats { display:flex; gap:40px; margin-top:48px; }
+  .stat-num { font-family:var(--font-mono); font-size:2rem; font-weight:700; color:var(--accent); display:block; }
+  .stat-label { font-size:12px; color:var(--text3); letter-spacing:0.5px; }
+
+  /* Terminal */
+  .terminal { background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; font-family:var(--font-mono); font-size:13px; }
+  .terminal-bar { background:var(--bg3); padding:12px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot-r { background:#ff5f57; } .dot-y { background:#febc2e; } .dot-g { background:#28c840; }
+  .terminal-title { flex:1; text-align:center; font-size:12px; color:var(--text3); }
+  .terminal-body { padding:20px; line-height:1.9; min-height:300px; }
+  .term-prompt { color:var(--accent); }
+  .term-cmd { color:var(--text); }
+  .term-out { color:var(--text2); font-size:12px; }
+  .term-green { color:var(--green); }
+  .term-amber { color:var(--amber); }
+  .cursor { display:inline-block; width:8px; height:14px; background:var(--accent); vertical-align:middle; animation:blink 1s step-end infinite; }
+  @keyframes blink { 50%{opacity:0} }
+
+  /* SECTIONS */
+  section { padding:100px 5%; }
+  .section-label { font-family:var(--font-mono); font-size:12px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .section-title { font-size:clamp(1.8rem,3vw,2.4rem); font-weight:700; letter-spacing:-0.5px; margin-bottom:16px; }
+  .section-sub { font-size:15px; color:var(--text2); max-width:600px; margin-bottom:60px; }
+  .divider-line { width:40px; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent3)); border-radius:2px; margin-bottom:20px; }
+
+  /* ABOUT */
+  #about { background:var(--bg2); }
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .about-text p { color:var(--text2); margin-bottom:18px; line-height:1.85; }
+  .about-tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; }
+  .tag { font-family:var(--font-mono); font-size:12px; color:var(--accent); background:rgba(0,212,255,0.08); border:1px solid var(--border); padding:6px 14px; border-radius:100px; }
+  .about-card { background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:16px; }
+  .about-card-title { font-family:var(--font-mono); font-size:13px; color:var(--accent); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .about-card-title::before { content:'▶'; font-size:10px; }
+  .about-card p { color:var(--text2); font-size:14px; }
+
+  /* SKILLS */
+  #skills { background:var(--bg); }
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+  .skill-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:28px; transition:border-color 0.2s,transform 0.2s; }
+  .skill-card:hover { border-color:var(--border2); transform:translateY(-3px); }
+  .skill-card-title { font-family:var(--font-mono); font-size:13px; color:var(--accent); margin-bottom:20px; letter-spacing:0.5px; }
+  .skill-items { display:flex; flex-wrap:wrap; gap:10px; }
+  .skill-item { display:flex; align-items:center; gap:8px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:13px; color:var(--text2); transition:border-color 0.2s; }
+  .skill-item:hover { border-color:var(--border2); color:var(--text); }
+  .skill-item img { width:20px; height:20px; object-fit:contain; }
+
+  /* EXPERIENCE */
+  #experience { background:var(--bg2); }
+  .timeline { position:relative; max-width:900px; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--accent),transparent); opacity:0.3; }
+  .exp-item { padding-left:40px; padding-bottom:56px; position:relative; }
+  .exp-dot { position:absolute; left:-5px; top:6px; width:11px; height:11px; border-radius:50%; background:var(--accent); border:2px solid var(--bg2); box-shadow:0 0 12px rgba(0,212,255,0.4); }
+  .exp-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:4px; }
+  .exp-title { font-size:18px; font-weight:600; color:var(--text); }
+  .exp-period { font-family:var(--font-mono); font-size:12px; color:var(--accent); background:rgba(0,212,255,0.08); border:1px solid var(--border); padding:4px 12px; border-radius:100px; white-space:nowrap; }
+  .exp-company { font-size:14px; color:var(--text2); margin-bottom:16px; }
+  .exp-company span { color:var(--text3); margin-left:8px; }
+  .exp-points { list-style:none; margin-bottom:20px; }
+  .exp-points li { color:var(--text2); font-size:14px; padding:4px 0 4px 16px; position:relative; }
+  .exp-points li::before { content:'–'; position:absolute; left:0; color:var(--accent); }
+  .tech-tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .tech-tag { font-family:var(--font-mono); font-size:11px; color:var(--accent2); background:rgba(0,153,204,0.1); border:1px solid rgba(0,153,204,0.2); padding:3px 10px; border-radius:4px; }
+
+  /* PROJECTS */
+  #projects { background:var(--bg); }
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; }
+  .project-card { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:28px; display:flex; flex-direction:column; gap:16px; transition:border-color 0.2s,transform 0.2s; position:relative; overflow:hidden; }
+  .project-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent3)); opacity:0; transition:opacity 0.2s; }
+  .project-card:hover { border-color:var(--border2); transform:translateY(-4px); }
+  .project-card:hover::before { opacity:1; }
+  .project-icon { width:44px; height:44px; border-radius:10px; background:rgba(0,212,255,0.1); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .project-title { font-size:16px; font-weight:600; color:var(--text); }
+  .project-desc { font-size:14px; color:var(--text2); line-height:1.75; flex:1; }
+  .project-features { list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .project-features li { font-size:13px; color:var(--text2); padding-left:14px; position:relative; }
+  .project-features li::before { content:'▸'; position:absolute; left:0; color:var(--accent); font-size:11px; }
+  .project-footer { display:flex; align-items:center; justify-content:space-between; padding-top:16px; border-top:1px solid var(--border); flex-wrap:wrap; gap:8px; }
+
+  /* CONTACT */
+  #contact { background:var(--bg2); }
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .contact-info { display:flex; flex-direction:column; gap:20px; }
+  .contact-item { display:flex; align-items:center; gap:16px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; padding:18px 20px; text-decoration:none; transition:border-color 0.2s; }
+  .contact-item:hover { border-color:var(--border2); }
+  .contact-icon { width:40px; height:40px; border-radius:8px; background:rgba(0,212,255,0.08); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .contact-label { font-size:12px; color:var(--text3); font-family:var(--font-mono); letter-spacing:0.5px; margin-bottom:4px; }
+  .contact-value { font-size:14px; color:var(--text); font-weight:500; }
+  .contact-form { display:flex; flex-direction:column; gap:16px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  label { font-family:var(--font-mono); font-size:12px; color:var(--text2); letter-spacing:0.5px; }
+  input, textarea { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:12px 16px; color:var(--text); font-family:var(--font-sans); font-size:14px; outline:none; transition:border-color 0.2s; width:100%; }
+  input:focus, textarea:focus { border-color:var(--accent); }
+  input::placeholder, textarea::placeholder { color:var(--text3); }
+  textarea { resize:vertical; min-height:120px; }
+  .btn-submit { background:var(--accent); color:#0a0e1a; font-family:var(--font-mono); font-size:13px; font-weight:600; padding:14px 32px; border-radius:8px; border:none; cursor:pointer; letter-spacing:0.5px; transition:all 0.2s; align-self:flex-start; }
+  .btn-submit:hover { background:#00bfe8; transform:translateY(-1px); }
+
+  /* FOOTER */
+  footer { background:var(--bg); border-top:1px solid var(--border); padding:40px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+  .footer-logo { font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--accent); }
+  .footer-sub { font-size:13px; color:var(--text3); margin-top:6px; }
+  .footer-links { display:flex; gap:12px; }
+  .footer-links a { width:38px; height:38px; border-radius:8px; background:var(--bg2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text2); text-decoration:none; font-size:15px; transition:all 0.2s; }
+  .footer-links a:hover { border-color:var(--border2); color:var(--accent); }
+  .footer-copy { font-size:13px; color:var(--text3); }
+
+  /* RESPONSIVE */
+  @media (max-width:900px) {
+    #hero { grid-template-columns:1fr; }
+    .about-grid, .contact-grid { grid-template-columns:1fr; }
+    .form-row { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+    .hero-stats { gap:24px; }
+    .terminal { display:none; }
+  }
+
+  .scanline { position:fixed; top:0; left:0; right:0; bottom:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px); pointer-events:none; z-index:9999; }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">{ LN }</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div>
+    <div class="hero-badge">Available for opportunities</div>
+    <h1 class="hero-title">Hi, I'm <span>Lawrence Nyongesa</span></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">
+      DevOps Engineer & Cloud Specialist with expertise in AWS, Azure, and Kubernetes — bridging infrastructure automation with AI/ML and multilingual data operations.
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-primary">Get in Touch</a>
+      <a href="#projects" class="btn btn-outline">View Work</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num" data-target="5">0</span><span class="stat-num">+</span>
+        <span class="stat-label">Years Experience</span>
+      </div>
+      <div>
+        <span class="stat-num" data-target="3">0</span><span class="stat-num">+</span>
+        <span class="stat-label">Cloud Platforms</span>
+      </div>
+      <div>
+        <span class="stat-num">99</span>
+        <span class="stat-label">.9% Uptime Target</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="terminal-title">lawrence@cloud:~</div>
+    </div>
+    <div class="terminal-body">
+      <div><span class="term-prompt">$ </span><span class="term-cmd">kubectl get nodes</span></div>
+      <br>
+      <div class="term-out">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STATUS&nbsp;&nbsp;&nbsp;ROLES</div>
+      <div class="term-out">k8s-master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="term-green">Ready</span>&nbsp;&nbsp;&nbsp;&nbsp;control-plane</div>
+      <div class="term-out">k8s-worker-01&nbsp;&nbsp;&nbsp;<span class="term-green">Ready</span>&nbsp;&nbsp;&nbsp;&nbsp;worker</div>
+      <div class="term-out">k8s-worker-02&nbsp;&nbsp;&nbsp;<span class="term-green">Ready</span>&nbsp;&nbsp;&nbsp;&nbsp;worker</div>
+      <br>
+      <div><span class="term-prompt">$ </span><span class="term-cmd">terraform apply -auto-approve</span></div>
+      <br>
+      <div class="term-out"><span class="term-green">Apply complete!</span> Resources: 8 added, 0 changed.</div>
+      <br>
+      <div><span class="term-prompt">$ </span><span class="term-cmd">aws ec2 describe-instances --region us-east-1</span></div>
+      <br>
+      <div class="term-out"><span class="term-amber">Instances:</span> 4 running | 0 stopped</div>
+      <br>
+      <div><span class="term-prompt">$ </span><span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">// about</div>
+  <div class="divider-line"></div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm Lawrence Nyongesa — a DevOps Engineer and Cloud Specialist passionate about building scalable, automated infrastructure. I combine deep technical expertise with a unique background in AI/ML data operations and multilingual content work.</p>
+      <p>My cloud journey spans AWS and Azure, deploying containerized workloads on Kubernetes and managing infrastructure with Terraform. I thrive at the intersection of engineering and data — whether that's spinning up cloud resources or annotating datasets that train intelligent systems.</p>
+      <p>Beyond infrastructure, I bring rare cross-functional value: experience in data annotation, image labeling, multilingual script writing, language labeling, and transcription — making me a strong contributor to AI/ML pipelines end-to-end.</p>
+      <div class="about-tags">
+        <span class="tag">Cloud Architect</span>
+        <span class="tag">Kubernetes Expert</span>
+        <span class="tag">ML Data Specialist</span>
+        <span class="tag">Multilingual</span>
+        <span class="tag">IaC Advocate</span>
+      </div>
+    </div>
+    <div>
+      <div class="about-card">
+        <div class="about-card-title">Infrastructure & DevOps</div>
+        <p>Designing and maintaining cloud-native infrastructure on AWS and Azure, with Kubernetes orchestration, Terraform IaC, and CI/CD automation pipelines.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-title">AI/ML Data Operations</div>
+        <p>End-to-end data annotation, image labeling, and dataset curation for machine learning projects. Experience with multilingual content — script writing, language labeling, and audio transcription.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-title">Philosophy</div>
+        <p>Automation is the bridge between complexity and clarity. I build systems that are resilient, observable, and maintainable — so teams can focus on innovation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">// skills</div>
+  <div class="divider-line"></div>
+  <h2 class="section-title">Technical Arsenal</h2>
+  <p class="section-sub">Technologies and tools I work with daily</p>
+  <div class="skills-grid">
+
+    <div class="skill-card">
+      <div class="skill-card-title">☁ Cloud Platforms</div>
+      <div class="skill-items">
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" alt="AWS"> AWS</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure"> Azure</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-title">⚙ Containers & Orchestration</div>
+      <div class="skill-items">
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="K8s"> Kubernetes</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker"> Docker</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-title">🏗 Infrastructure as Code</div>
+      <div class="skill-items">
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" alt="Terraform"> Terraform</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ansible/ansible-original.svg" alt="Ansible"> Ansible</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-title">🤖 AI / Machine Learning</div>
+      <div class="skill-items">
+        <div class="skill-item">🧠 ML Engineering</div>
+        <div class="skill-item">🏷 Data Annotation</div>
+        <div class="skill-item">🖼 Image Labeling</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"> Python</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-title">🌍 Language & Multilingual</div>
+      <div class="skill-items">
+        <div class="skill-item">✍ Script Writing</div>
+        <div class="skill-item">🏷 Language Labeling</div>
+        <div class="skill-item">🎙 Transcription</div>
+        <div class="skill-item">🌐 Multilingual Content</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-title">🔧 DevOps Tooling</div>
+      <div class="skill-items">
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"> GitHub Actions</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg" alt="GitLab"> GitLab CI</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux"> Linux</div>
+        <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" alt="Bash"> Bash</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">// experience</div>
+  <div class="divider-line"></div>
+  <h2 class="section-title">Professional Journey</h2>
+  <p class="section-sub">Cloud infrastructure, DevOps engineering, and AI data operations</p>
+
+  <div class="timeline">
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-title">DevOps Engineer</div>
+        <div class="exp-period">Current</div>
+      </div>
+      <div class="exp-company">Cloud Infrastructure <span>| Remote</span></div>
+      <ul class="exp-points">
+        <li>Designed and maintained cloud-native infrastructure on AWS and Azure at scale</li>
+        <li>Orchestrated containerized workloads using Kubernetes clusters across multiple environments</li>
+        <li>Automated infrastructure provisioning with Terraform for consistent, reproducible deployments</li>
+        <li>Built and maintained CI/CD pipelines using GitHub Actions and GitLab CI</li>
+        <li>Implemented monitoring and alerting stacks for production system observability</li>
+      </ul>
+      <div class="tech-tags">
+        <span class="tech-tag">AWS</span><span class="tech-tag">Azure</span><span class="tech-tag">Kubernetes</span><span class="tech-tag">Terraform</span><span class="tech-tag">Docker</span>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-title">ML Data Annotator & Language Specialist</div>
+        <div class="exp-period">Ongoing</div>
+      </div>
+      <div class="exp-company">AI/ML Data Operations <span>| Remote</span></div>
+      <ul class="exp-points">
+        <li>Performed high-accuracy data annotation and image labeling for ML training datasets</li>
+        <li>Developed multilingual scripts and content for AI language model training</li>
+        <li>Executed language labeling and audio transcription tasks across multiple languages</li>
+        <li>Collaborated with ML teams to ensure data quality meets model training standards</li>
+        <li>Contributed to end-to-end AI/ML data pipelines from collection through annotation</li>
+      </ul>
+      <div class="tech-tags">
+        <span class="tech-tag">Data Annotation</span><span class="tech-tag">Image Labeling</span><span class="tech-tag">Transcription</span><span class="tech-tag">NLP</span>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-title">Cloud Systems Administrator</div>
+        <div class="exp-period">Prior</div>
+      </div>
+      <div class="exp-company">Infrastructure Support <span>| Kenya</span></div>
+      <ul class="exp-points">
+        <li>Managed Linux-based server environments and automated routine operations with Bash scripts</li>
+        <li>Deployed and configured cloud resources on AWS including EC2, S3, RDS, and VPCs</li>
+        <li>Established backup, recovery, and security hardening procedures for production systems</li>
+        <li>Provided technical support and documentation for infrastructure operations</li>
+      </ul>
+      <div class="tech-tags">
+        <span class="tech-tag">AWS</span><span class="tech-tag">Linux</span><span class="tech-tag">Bash</span><span class="tech-tag">Networking</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">// projects</div>
+  <div class="divider-line"></div>
+  <h2 class="section-title">Featured Work</h2>
+  <p class="section-sub">Infrastructure and data projects I've designed and delivered</p>
+
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-icon">🎙</div>
+      <div class="project-title">Language Transcription — Imerit</div>
+      <div class="project-desc">Audio and speech transcription work delivered for Imerit, converting spoken language recordings into accurate, structured text for AI training datasets.</div>
+      <ul class="project-features">
+        <li>Accurate transcription of multilingual audio</li>
+        <li>Speaker diarization and timestamping</li>
+        <li>Quality review and error correction</li>
+        <li>Formatted output for NLP pipelines</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">Imerit</span><span class="tech-tag">Transcription</span><span class="tech-tag">NLP</span></div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">🖼</div>
+      <div class="project-title">Image Labeling — Imerit</div>
+      <div class="project-desc">Computer vision data annotation for Imerit — labeling images with bounding boxes, segmentation masks, and object classifications to power ML model training.</div>
+      <ul class="project-features">
+        <li>Bounding box & polygon annotation</li>
+        <li>Semantic segmentation labeling</li>
+        <li>Object detection dataset curation</li>
+        <li>Quality assurance & inter-annotator review</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">Imerit</span><span class="tech-tag">Computer Vision</span><span class="tech-tag">ML Data</span></div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">✍</div>
+      <div class="project-title">Multilingual Script Writing</div>
+      <div class="project-desc">Developed original multilingual scripts and content for AI language model training — covering diverse topics, tones, and language styles across multiple languages.</div>
+      <ul class="project-features">
+        <li>Original scripts in multiple languages</li>
+        <li>Topic and tone diversity for model coverage</li>
+        <li>Culturally accurate and contextually rich content</li>
+        <li>Delivered to AI/NLP training specifications</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">Multilingual</span><span class="tech-tag">Script Writing</span><span class="tech-tag">AI Training</span></div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">☁</div>
+      <div class="project-title">Cloud Infrastructure — Odrisystems</div>
+      <div class="project-desc">DevOps and cloud infrastructure work with Odrisystems, deploying and managing scalable cloud environments, CI/CD pipelines, and containerized services.</div>
+      <ul class="project-features">
+        <li>Cloud resource provisioning on AWS & Azure</li>
+        <li>Kubernetes workload management</li>
+        <li>CI/CD pipeline setup and maintenance</li>
+        <li>Infrastructure monitoring and alerting</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">Odrisystems</span><span class="tech-tag">AWS</span><span class="tech-tag">Kubernetes</span></div>
+        <a href="https://odrisystems.com" target="_blank" class="project-link">Visit →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">☸</div>
+      <div class="project-title">Kubernetes Multi-Env Platform</div>
+      <div class="project-desc">Production-grade Kubernetes cluster deployed on AWS EKS with Terraform, supporting dev, staging, and production environments with GitOps workflows.</div>
+      <ul class="project-features">
+        <li>AWS EKS cluster with auto-scaling node groups</li>
+        <li>Terraform modules for repeatable deployments</li>
+        <li>Namespace isolation per environment</li>
+        <li>Helm charts for all services</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">AWS EKS</span><span class="tech-tag">Terraform</span><span class="tech-tag">Helm</span></div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">🏗</div>
+      <div class="project-title">Terraform AWS Infrastructure</div>
+      <div class="project-desc">Modular Terraform codebase provisioning a full AWS environment including VPC, subnets, security groups, EC2, RDS, and IAM roles.</div>
+      <ul class="project-features">
+        <li>Reusable Terraform modules</li>
+        <li>Remote state in S3 with DynamoDB lock</li>
+        <li>Multi-region support</li>
+        <li>Least-privilege IAM policies</li>
+      </ul>
+      <div class="project-footer">
+        <div class="tech-tags"><span class="tech-tag">Terraform</span><span class="tech-tag">AWS</span><span class="tech-tag">IaC</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">// contact</div>
+  <div class="divider-line"></div>
+  <h2 class="section-title">Let's Connect</h2>
+  <p class="section-sub">Have a project in mind? Let's build something great together.</p>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <a href="mailto:goldenmoses036@gmail.com" class="contact-item">
+        <div class="contact-icon">✉</div>
+        <div><div class="contact-label">Email</div><div class="contact-value">goldenmoses036@gmail.com</div></div>
+      </a>
+      <a href="https://www.linkedin.com/in/golden-moses-3a9156318/" class="contact-item" target="_blank">
+        <div class="contact-icon" style="font-weight:700;font-size:14px;font-family:var(--font-mono);">in</div>
+        <div><div class="contact-label">LinkedIn</div><div class="contact-value">linkedin.com/in/golden-moses-3a9156318</div></div>
+      </a>
+      <a href="https://github.com/GoldenM18" class="contact-item" target="_blank">
+        <div class="contact-icon">⌥</div>
+        <div><div class="contact-label">GitHub</div><div class="contact-value">github.com/GoldenM18</div></div>
+      </a>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><div class="contact-label">Location</div><div class="contact-value">Kenya — Available Worldwide (Remote)</div></div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="return false;">
+      <div class="form-row">
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Jane Doe"></div>
+        <div class="form-group"><label>Your Email</label><input type="email" placeholder="jane@example.com"></div>
+      </div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="Project inquiry / Collaboration"></div>
+      <div class="form-group"><label>Your Message</label><textarea placeholder="Tell me about your project or opportunity..."></textarea></div>
+      <button type="submit" class="btn-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">{ LN }</div>
+    <div class="footer-sub">Building cloud infrastructure & intelligent data pipelines.</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/golden-moses-3a9156318/" target="_blank" title="LinkedIn" style="font-weight:700;font-size:13px;font-family:var(--font-mono);">in</a>
+    <a href="https://github.com/GoldenM18" target="_blank" title="GitHub">⌥</a>
+    <a href="mailto:goldenmoses036@gmail.com" title="Email">✉</a>
+  </div>
+  <div class="footer-copy">© 2025 Lawrence Nyongesa (Golden Moses). All rights reserved.</div>
+</footer>
+
+<script>
+  const counters = document.querySelectorAll('[data-target]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target);
+        let count = 0;
+        const step = Math.ceil(target / 40);
+        const timer = setInterval(() => {
+          count += step;
+          if (count >= target) { count = target; clearInterval(timer); }
+          el.textContent = count;
+        }, 40);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => observer.observe(c));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const scrollObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.color = link.getAttribute('href') === '#' + entry.target.id ? 'var(--accent)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => scrollObs.observe(s));
+</script>
+</body>
+</html>
